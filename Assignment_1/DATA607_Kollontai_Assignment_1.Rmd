@@ -1,0 +1,62 @@
+---
+title: "DATA607 Assignment 1"
+author: "Misha Kollontai"
+date: "8/28/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+ShroomData <- read.csv("https://raw.githubusercontent.com/mkollontai/DATA607/master/Assignment_1/agaricus-lepiota.data")
+ShroomData <- ShroomData[1:10,1:5]
+
+names(ShroomData) <- c("Edibility","Cap_Shape", "Cap_Surface", "Cap_Color",  "Bruises")
+
+levels(ShroomData$Edibility) <- list(
+  Edible = "e",
+  Poisonous = "p"
+)
+
+levels(ShroomData$Cap_Shape) <- list(
+  Bell = "b",
+  Conical = "c",
+  conveX = "x",
+  Flat = "f",
+  Knobbed = "k",
+  Sunken = "s"
+)
+
+levels(ShroomData$Cap_Surface) <- list(
+  Fibrous = "f",
+  Grooves = "g",
+  scalY = "y",
+  Smooth = "s"
+)
+
+levels(ShroomData$Cap_Color) <- list(
+  rowN = "n",
+  Buff = "b",
+  Cinnamon = "c",
+  Grey = "g",
+  gReen = "r",
+  Pink = "p",
+  pUrple = "u",
+  rEd = "e",
+  White = "w",
+  Yellow = "y"
+)
+
+levels(ShroomData$Bruises) <- list(
+  Bruises = "t",
+  No = "f"
+)
+```
+### First 10 rows as a sample:
+``` {r}
+ShroomData[1:10,]
+```
