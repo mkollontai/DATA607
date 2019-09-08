@@ -1,0 +1,59 @@
+---
+title: "DATA607_HW2"
+author: "Misha Kollontai"
+date: "9/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+### we start by accessing the database. To do this, run the two SQL scripts provided in the github repository (https://github.com/mkollontai/DATA607/tree/master/HW2). 
+
+### First run the schema script, then the data.
+
+### We must now upload this data to R using RMYSQL
+
+```{r}
+library(RMySQL)
+usr <- 'root'
+pw <- 'password'
+db <- 'movieratings'
+
+connection <- dbConnect(MySQL(), user = usr, password = pw, dbname = db, host = "localhost")
+
+selection <- "SELECT people.name, people.gender, movies.title, movies.year_released, reviews.rating, movies.imdb_rating FROM people INNER JOIN reviews ON people.person_id=reviews.person_id INNER JOIN movies ON movies.movie_id=reviews.movie_id ORDER BY title;"
+
+ratings <- dbGetQuery(connection, selection)
+ratings
+
+```
+
+### Now that we have the data in R, let's take a look at how different my friends' ratings are from the IMDB ratings available online.
+
+### Let's average the ratings from the friends who had seen each movie and compare that to IMDB ratings.
+
+```{r}
+reviews_only <- "SELECT movies.title, avg(reviews.rating), movies.imdb_rating FROM movies INNER JOIN reviews ON movies.movie_id=reviews.movie_id GROUP BY title;"
+
+review.compare <- dbGetQuery(connection, reviews_only)
+names(review.compare)[2] <- "friend_rating"
+review.compare
+
+compare_matrix = matrix(,nrow = 2, ncol = 6)
+compare_matrix[1,] = review.compare$friend_rating
+compare_matrix[2,] = review.compare$imdb_rating
+
+#plot the ratings side-by-side to determine how in-line with IMDB my friends' views are
+barplot(compare_matrix, names.arg = review.compare$title, beside = TRUE, col = c("blue", "red"), legend.text = c("Friends","IMDB"), cex.names = 0.9,args.legend = list(x="bottomright"), ylim = c(0,10))
+```
+
+#### We must always take care to disconnect from the db
+```{r}
+dbDisconnect(connection)
+```
+
+### As we can see, the ratings collected from my friends were fairly similar to the average available on IMDB (generally from hundreds of thousands or millions of averaged reviews), though the IMDB ratings did seem to be slightly higher on average.
