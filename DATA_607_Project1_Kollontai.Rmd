@@ -1,0 +1,125 @@
+---
+title: "DATA607 Project 1"
+author: "Misha Kollontai"
+date: "9/16/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(stringr) #for manipulating strings
+
+#Read the first row of the text file to get column names
+FirstRow <- read.table("tournamentinfo.txt", sep="|", skip = 1, nrows = 1)
+#Read the second line of the text file to finish of column names and get formatting
+Formats <- read.table("tournamentinfo.txt", sep="|", skip = 2, nrows = 1)
+#Create a new frame containing the combination of necessary entries from column names and formatting
+Combined <- FirstRow
+for (i in c(1,3:10)){
+  Combined[i] <- paste(Combined[1,i],Formats[1,i], sep =" ")
+}
+
+#Read the rest of the data from the text file
+d = read.table("tournamentinfo.txt", sep="|", skip = 4, fill = TRUE, col.names = Combined)
+
+#Remove the lines separating the entries for each participant
+DashLines = seq(3,192,by=3)
+d <- d[-DashLines,1:10]
+#d
+
+#Determine number of participants by dividing the number of enires by 2 (2 rows per person)
+NumPpl <- nrow(d)/2
+
+#Create a new dataframe to fill where each row will correspond with a participant in the tournament
+TourneyData <- data.frame()
+colNames <- c("Name", "State", "Total Pts", "Pre-Rating", "Opp1", "Opp2", "Opp3", "Opp4", "Opp5", "Opp6", "Opp7", "Opp1Rnk", "Opp2Rnk", "Opp3Rnk", "Opp4Rnk", "Opp5Rnk", "Opp6Rnk", "Opp7Rnk", "AvgOppRank")
+
+for (k in colNames) TourneyData[[k]] <- as.character()
+
+#Convert all columns to numeric types
+TourneyData$`Pre-Rating` <- as.numeric(as.character(TourneyData$`Pre-Rating`))
+TourneyData$Opp1 <- as.numeric(as.character(TourneyData$Opp1))
+TourneyData$Opp2 <- as.numeric(as.character(TourneyData$Opp2))
+TourneyData$Opp3 <- as.numeric(as.character(TourneyData$Opp3))
+TourneyData$Opp4 <- as.numeric(as.character(TourneyData$Opp4))
+TourneyData$Opp5 <- as.numeric(as.character(TourneyData$Opp5))
+TourneyData$Opp6 <- as.numeric(as.character(TourneyData$Opp6))
+TourneyData$Opp7 <- as.numeric(as.character(TourneyData$Opp7))
+TourneyData$Opp1Rnk <- as.numeric(as.character(TourneyData$Opp1Rnk))
+TourneyData$Opp2Rnk <- as.numeric(as.character(TourneyData$Opp2Rnk))
+TourneyData$Opp3Rnk <- as.numeric(as.character(TourneyData$Opp3Rnk))
+TourneyData$Opp4Rnk <- as.numeric(as.character(TourneyData$Opp4Rnk))
+TourneyData$Opp5Rnk <- as.numeric(as.character(TourneyData$Opp5Rnk))
+TourneyData$Opp6Rnk <- as.numeric(as.character(TourneyData$Opp6Rnk))
+TourneyData$Opp7Rnk <- as.numeric(as.character(TourneyData$Opp7Rnk))
+TourneyData$AvgOppRank <- as.numeric(as.character(TourneyData$AvgOppRank))
+
+#For the number of participants in the data, pull data from dataframe 'd'
+for (i in 1:NumPpl){
+  #Columns 1-3 simply pull the data from colums 2,1 and 3 of dataframe 'd', picking the 
+  #proper row of the two that correspond to each participant, trimming excess spaces
+  TourneyData[i,1] <- str_trim(toString(d[i*2-1,2]))
+  TourneyData[i,2] <- str_trim(toString(d[i*2,1]))
+  TourneyData[i,3] <- str_trim(toString(d[i*2-1,3]))
+  
+  #Pull the part of the string out of column 2 that contains the "R:" followed by spaces and 3 to 4 digits
+  PreRank <- str_extract(toString(d[i*2,2]),"R:( )+[[:digit:]]{3,}")
+  #From that string, pull the 3-4 digit number that signifies the participants pre-rank
+  TourneyData[i,4] <- as.numeric((str_extract(PreRank,"([[:digit:]]){3,4}")))
+  
+  #For Columns 5-11, pull the 1 to 3 digit number out of columns 4-10 of dataframe 'd'
+  TourneyData[i,5] <- as.numeric(str_extract(toString(d[i*2-1,4]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,6] <- as.numeric(str_extract(toString(d[i*2-1,5]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,7] <- as.numeric(str_extract(toString(d[i*2-1,6]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,8] <- as.numeric(str_extract(toString(d[i*2-1,7]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,9] <- as.numeric(str_extract(toString(d[i*2-1,8]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,10] <- as.numeric(str_extract(toString(d[i*2-1,9]),"\\b[[:digit:]]{1,3}"))
+  TourneyData[i,11] <- as.numeric(str_extract(toString(d[i*2-1,10]),"\\b[[:digit:]]{1,3}"))
+}
+
+#For each participant, pull the pre-ranks associated with the numbers in columns 5-11 and place those
+#pre-ranks in columns 12-18. Calculate the mean of those 7 numbers (ignoring NAs) and place that
+#result in column 19, rounding to 1 digit
+for (i in 1:NumPpl){
+  for (j in 1:7){
+    TourneyData[i,11+j] <- TourneyData[TourneyData[i,4+j],4]  
+  }
+  Opponents <- c(TourneyData[i,18],TourneyData[i,17],TourneyData[i,16],TourneyData[i,15],TourneyData[i,14],TourneyData[i,13],TourneyData[i,12])
+  TourneyData[i,19] <- round(mean(Opponents,trim =0, na.rm = TRUE),1)
+}
+
+#Create a new dataframe containing only the data we want to go to the CSV file
+FinalData <- data.frame(matrix(NA, nrow = NumPpl, ncol = 5))
+FinalColNames <- c("Name", "State", "Total Pts", "Pre-Rating", "AvgOppRank")
+names(FinalData) <- FinalColNames
+
+FinalData$Name <- TourneyData$Name
+FinalData$State <- TourneyData$State
+FinalData$`Total Pts` <- TourneyData$`Total Pts`
+FinalData$`Pre-Rating` <- TourneyData$`Pre-Rating`
+FinalData$AvgOppRank <- TourneyData$AvgOppRank
+
+#Time to format the names
+FinalData$Name <- tolower(FinalData$Name)
+
+#Use a modified version of the function found on
+#(https://stackoverflow.com/questions/6364783/capitalize-the-first-letter-of-both-words-in-a-two-word-string)
+#to convert names to proper formatting
+simpleCap <- function(x) {
+  s <- strsplit(x, " ")[[1]]
+  paste(toupper(substring(s, 1,1)), substring(s, 2),
+      sep="", collapse=" ")
+}
+
+for (i in 1:NumPpl){
+  name <- FinalData$Name[i]
+  FinalData$Name[i]  <- sapply(name, simpleCap)
+}
+
+#Finally, export the final data to a csv file. 
+write.csv(FinalData, file = "Kollontai_Project1_Results.csv",row.names = FALSE, na="", quote = FALSE)
+```
