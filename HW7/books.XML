@@ -1,37 +1,36 @@
 <?xml version= "1.0" encoding="UTF-8"?>
+	<FANTASYBOOKS>
+		<BOOK>
+			<TITLE>A Memory of Light</TITLE>
+			<AUTHOR>Robert Jordan and Brandon Sanderson</AUTHOR>
+			<YEAR>2013</YEAR>
+			<PUBLISHER>Tor Books</PUBLISHER>
+			<SERIES>A Wheel of Time</SERIES>
+		</BOOK>
 
-<FANTASYBOOKS>
-	<BOOK>
-		<TITLE>A Memory of Light</TITLE>
-		<AUTHOR>Robert Jordan and Brandon Sanderson</AUTHOR>
-		<YEAR>2013</YEAR>
-		<PUBLISHER>Tor Books</PUBLISHER>
-		<SERIES>A Wheel of Time</SERIES>
-	</BOOK>
+		<BOOK>
+			<TITLE>Words of Radiance</TITLE>
+			<AUTHOR>Brandon Sanderson</AUTHOR>
+			<YEAR>2014</YEAR>
+			<PUBLISHER>Tor Books</PUBLISHER>
+			<SERIES>The Stormlight Archive</SERIES>
+		</BOOK>
 
-	<BOOK>
-		<TITLE>Words of Radiance</TITLE>
-		<AUTHOR>Brandon Sanderson</AUTHOR>
-		<YEAR>2014</YEAR>
-		<PUBLISHER>Tor Books</PUBLISHER>
-		<SERIES>The Stormlight Archive</SERIES>
-	</BOOK>
-	
-	<BOOK>
-		<TITLE>Name of the Wind</TITLE>
-		<AUTHOR>Patrick Rothfuss</AUTHOR>
-		<YEAR>2007</YEAR>
-		<PUBLISHER>DAW Books</PUBLISHER>
-		<SERIES>The Kingkiller Chronicle</SERIES>
-	</BOOK>
+		<BOOK>
+			<TITLE>Name of the Wind</TITLE>
+			<AUTHOR>Patrick Rothfuss</AUTHOR>
+			<YEAR>2007</YEAR>
+			<PUBLISHER>DAW Books</PUBLISHER>
+			<SERIES>The Kingkiller Chronicle</SERIES>
+		</BOOK>
 
-	<BOOK>
-		<TITLE>Lies of Locke Lamora</TITLE>
-		<AUTHOR>Scott Lynch</AUTHOR>
-		<YEAR>2006</YEAR>
-		<PUBLISHER>Bantam Spectra</PUBLISHER>
-		<SERIES>Gentleman Bastard</SERIES>
-	</BOOK>
-</FANTASYBOOKS>
+		<BOOK>
+			<TITLE>Lies of Locke Lamora</TITLE>
+			<AUTHOR>Scott Lynch</AUTHOR>
+			<YEAR>2006</YEAR>
+			<PUBLISHER>Bantam Spectra</PUBLISHER>
+			<SERIES>Gentleman Bastard</SERIES>
+		</BOOK>
+	</FANTASYBOOKS>
 		
 			
