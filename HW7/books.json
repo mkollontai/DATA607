@@ -1,3 +1,4 @@
+var FantasyBooks =
 {
 	"Title" : ["A Memory of Light", "Words of Radiance", "Name of the Wind","Lies of Locke Lamora"],
 	"Author" : ["Robert Jordan & Brandon Sanderson", "Brandon Sanderson", "Patrick Rothfuss", "Scott Lynch"],
