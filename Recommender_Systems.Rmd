@@ -1,0 +1,66 @@
+---
+title: "Recommender_Systems"
+author: "Misha Kollontai"
+date: "11/5/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(recommenderlab)
+library(tibble)
+library(dplyr)
+
+# Approach taken from (https://justrocketscience.com/post/recommender-systems-r/)
+
+Names <- c("Bob", "Tom", "Ann", "Betty", "Claudio","Paul","Steve","Kim")
+PulpFiction <- c(1,1,1,0,1,1,1,0)
+Clue <- c(0,0,0,0,1,0,1,1)
+BluesBros <- c(1,1,0,0,1,1,0,1)
+Gladiator <- c(0,1,0,1,0,0,1,1)
+Godfather <- c(1,1,1,1,1,1,1,1)
+Interstellar <- c(0,1,1,1,0,0,0,1)
+
+#Make a dataframe with 8 respondents and whether they liked 6 movies
+RatingsDF <- data.frame(Names,PulpFiction,Clue,BluesBros,Gladiator,Godfather,Interstellar) %>%
+  column_to_rownames(var = "Names")
+RatingsDF
+
+#Convert to BinaryRatingsMatrix type
+binaryRat <- as.matrix(RatingsDF) %>% as("binaryRatingMatrix")
+
+#Create the model
+model <- Recommender(data = binaryRat, method = "UBCF", 
+                     parameter = list(method = "cosine"))
+
+```
+
+```{r}
+#Let's predict how a new group of poeple will like Interstellar (assuming we have ratings from them on the other films)
+
+PredNames <- c("Robert", "Tim", "Egg", "Crocker")
+PulpFiction <- c(0,1,0,1)
+Clue <- c(0,0,1,1)
+BluesBros <- c(1,1,0,1)
+Gladiator <- c(0,1,1,1)
+Godfather <- c(1,1,0,1)
+Interstellar <- c(0,0,0,0)
+
+Predictions <- data.frame(PredNames,PulpFiction,Clue,BluesBros,Gladiator,Godfather,Interstellar) %>%
+  column_to_rownames(var = "PredNames")
+
+PredRat <- as.matrix(Predictions) %>% as("binaryRatingMatrix")
+
+
+#Predict how much the not rated movies will be liked.
+#None of the new people watched Interstellar
+recommendations <- predict(model, PredRat, n = 4)
+Recs <- as(recommendations, "matrix") %>% as.data.frame()
+Recs
+
+```
+
